@@ -12,11 +12,11 @@ post_schema = PostSchema(many=True)
 def get_posts():
     posts = Post.query.all()
     if posts:
-        results = post_schema.dumps(posts)
+        results = post_schema.dump(posts)
         return jsonify({
             'status': 'ok',
             'code': 200,
-            'data': results
+            'data': results.data
         }), 200
     else:
         return jsonify({
@@ -31,7 +31,8 @@ def get_posts():
 def insert_post():
     content = request.get_json()
     try:
-        post = Post(title=content['title'], body=content['body'], sub_body='test')
+        post = Post(title=content['title'], body=content['body'])
+        post.set_sub_body(post.body)
         data, errors = PostSchema().load(post.__dict__)
         if errors:
             return jsonify({
