@@ -14,7 +14,7 @@ category_schema = CategorySchema(many=True)
 def get_posts():
     posts = Post.query.all()
     if posts:
-        results = post_schema.dump(posts)
+        results = post_schema.dump(posts).encode('utf-8')
         return jsonify({
             'status': 'ok',
             'code': 200,
@@ -27,6 +27,24 @@ def get_posts():
             'msg': 'No data found',
             'data': []
         }), 200
+
+
+@bp.route('/api/posts/<slug>', methods=['GET'])
+def get_post_by_slug(slug):
+    post = Post.query.filter_by(slug_title=slug)
+    if post:
+        result = post_schema.dump(post)
+        return jsonify({
+            'status': 'ok',
+            'code': 200,
+            'data': result.data
+        }), 200
+    return jsonify({
+        'status': 'ok',
+        'code': 200,
+        'msg': 'No data found',
+        'data': []
+    }), 200
 
 
 @bp.route('/api/posts', methods=['POST'])

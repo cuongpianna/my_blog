@@ -1,10 +1,18 @@
-from marshmallow import Schema, fields, validates, ValidationError
+from marshmallow import Schema, fields, validates, ValidationError, post_dump
 from app.post.models import Post, Category
 
 
 class PostSchema(Schema):
     title = fields.Str()
+    slug_title = fields.Str()
     body = fields.Str()
+    sub_body = fields.Str()
+    time_stamp = fields.DateTime()
+
+    @post_dump
+    def encode_title(self, in_data):
+        in_data['title'] = in_data['title']
+        return in_data
 
     @validates('title')
     def validate_title(self, value):
