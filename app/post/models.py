@@ -9,5 +9,8 @@ class Post(db.Model):
     sub_body = db.Column(db.String(), default='')
     time_stamp = db.Column(db.DateTime, default=datetime.utcnow())
 
+    def set_sub_body(self, value):
+        self.sub_body = value[0:300]
+
     def __repr__(self):
         return '<Post {}>'.format(self.title)
