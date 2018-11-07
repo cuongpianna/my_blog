@@ -14,7 +14,7 @@ category_schema = CategorySchema(many=True)
 def get_posts():
     posts = Post.query.all()
     if posts:
-        results = post_schema.dump(posts).encode('utf-8')
+        results = post_schema.dump(posts)
         return jsonify({
             'status': 'ok',
             'code': 200,
