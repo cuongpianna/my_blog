@@ -24,9 +24,9 @@ class CategorySchema(Schema):
     @validates('name')
     def validate_name(self, value):
         if len(value) < 6:
-            raise ValidationError('Title must be greater than 6')
+            raise ValidationError('Category must be greater than 6')
         elif len(value) > 64:
-            raise ValidationError('Title must not be greater than 100')
+            raise ValidationError('Category must not be greater than 100')
         else:
             post = Category.query.filter_by(name=value).first()
             if post:

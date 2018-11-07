@@ -105,7 +105,7 @@ def insert_categories():
         return jsonify({
             'status': 'ok',
             'code': 201,
-            'msg': 'Create a new category successfully!'
+            'msg': 'Create new category successfully!'
         }), 201
     except:
         return jsonify({
