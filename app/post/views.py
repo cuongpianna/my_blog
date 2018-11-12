@@ -10,17 +10,14 @@ from app.helpers.extensions import db
 
 @bp.route('/api/categories', methods=['GET'])
 def get_categories():
-    categories = Category.query.all()
-    if not categories:
+    page = request.args.get('page', 1, type=int)
+    per_page = min(request.args.get('per_page', 10, type=int), 100)
+    data = Category.to_collection_dict(Category.query, page, per_page)
+    if not data:
         return jsonify({
             'status': 'ok', 'code': 200, 'msg': 'No data found'
         })
-    results = [cate.to_json() for cate in categories]
-    return jsonify({
-        'status': 'ok',
-        'code': 200,
-        'data': results
-    }), 200
+    return jsonify(data), 200
 
 @bp.route('/api/category', methods=['POST'])
 def insert_category():
@@ -85,10 +82,12 @@ def delete_category(id):
 
 @bp.route('/api/posts', methods=['GET'])
 def get_posts():
-    posts = Post.query.all()
-    if posts:
+    page = request.args.get('page', 1, type=int)
+    per_page = min(request.args.get('per_page', 10, type=int), 100)
+    data = Post.to_collection_dict(Post.query, page, per_page)
+    if data:
         return jsonify([
-            p.to_json() for p in posts
+            data
         ]), 200
     else:
         return jsonify({
