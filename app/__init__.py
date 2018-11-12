@@ -1,9 +1,11 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 
 from config import config
 from app.helpers.extensions import db
 
+UPLOAD_FOLDER = os.path.realpath('.') + '\\uploads'
 
 def create_app(config_name):
     app = Flask(__name__)
