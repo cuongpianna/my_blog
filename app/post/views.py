@@ -1,8 +1,12 @@
-from flask import request, jsonify
+import os
+from flask import request, jsonify, current_app
 from app.post.serializers import PostSchema, CategorySchema
 from app.post.models import Post, Category
 from app.post import bp
 from app.helpers.extensions import db
+from app import UPLOAD_FOLDER
+from werkzeug.utils import secure_filename
+
 
 # post_schema = PostSchema()
 # post_schema = PostSchema(many=True)
@@ -131,3 +135,17 @@ def insert_post():
             'code': 403,
             'msg': 'Fail'
         })
+
+
+@bp.route('/api/upload', methods=['POST'])
+def upload_file():
+    files = request.files
+    files = files.to_dict()
+    for k, v in files.items():
+        file_name = secure_filename(v.filename)
+        v.save(os.path.join(UPLOAD_FOLDER, file_name))
+    # file = request.files['file']
+    # file_name = secure_filename(file.filename)
+    # file.save(os.path.join(UPLOAD_FOLDER, file_name))
+    # print(current_app.config['UPLOAD_FOLDER'])
+    return '1'
