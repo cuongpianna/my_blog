@@ -1,9 +1,10 @@
 from datetime import datetime
 from slugify import slugify
 from app.helpers.extensions import db
+from app.mixin.base import PaginatedAPIMixin
 
 
-class Post(db.Model):
+class Post(PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), unique=True, nullable=False)
     slug_title = db.Column(db.String(255), unique=True)
@@ -31,7 +32,7 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.title)
 
-class Category(db.Model):
+class Category(PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
     slug_name = db.Column(db.String(255), unique=True)
