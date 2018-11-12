@@ -25,4 +25,4 @@ class CategorySchema(Schema):
         else:
             cate = Category.query.filter_by(name=value).first()
             if cate:
-                raise ValidationError('Category does not exists')
+                raise ValidationError('Category already exists')
