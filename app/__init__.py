@@ -18,4 +18,4 @@ def create_app(config_name):
 
 def register_extensions(app):
     db.init_app(app)
-    CORS(app)
+    CORS(app, resources={r"*": {"origins": "*"}})

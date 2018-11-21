@@ -4,6 +4,7 @@ from app.post.serializers import PostSchema, CategorySchema
 from app.post.models import Post, Category
 from app.post import bp
 from app.helpers.extensions import db
+from app.helpers.upload import s3
 from app import UPLOAD_FOLDER
 from werkzeug.utils import secure_filename
 
@@ -90,9 +91,7 @@ def get_posts():
     per_page = min(request.args.get('per_page', 10, type=int), 100)
     data = Post.to_collection_dict(Post.query, page, per_page)
     if data:
-        return jsonify([
-            data
-        ]), 200
+        return jsonify(data), 200
     else:
         return jsonify({
             'status': 'ok',
@@ -139,13 +138,19 @@ def insert_post():
 
 @bp.route('/api/upload', methods=['POST'])
 def upload_file():
-    files = request.files
-    files = files.to_dict()
-    for k, v in files.items():
-        file_name = secure_filename(v.filename)
-        v.save(os.path.join(UPLOAD_FOLDER, file_name))
-    # file = request.files['file']
-    # file_name = secure_filename(file.filename)
-    # file.save(os.path.join(UPLOAD_FOLDER, file_name))
-    # print(current_app.config['UPLOAD_FOLDER'])
-    return '1'
+    try:
+        files = request.files
+        file = request.files['file']
+        file_name = secure_filename(file.filename)
+        b = s3.Bucket('creatjvvdjdkk').put_object(Key=file_name, Body=file, ACL='public-read')
+        return jsonify({
+            'status': 'ok',
+            'code': 200,
+            'file_url': 'https://s3.us-east-2.amazonaws.com/creatjvvdjdkk/{}'.format(file.filename),
+            'file_name': file_name
+        })
+    except:
+        return jsonify({
+            'status': 'fail',
+            'msg': 'Upload fail!'
+        })
