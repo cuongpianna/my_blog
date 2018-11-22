@@ -100,6 +100,15 @@ def get_posts():
             'data': []
         }), 200
 
+@bp.route('/api/posts/<id>')
+def get_post(id):
+    data = Post.query.get(id)
+    return jsonify({
+        'item': data.to_json(),
+        'status': 'ok',
+        'code': 200
+    })
+
 
 @bp.route('/api/posts', methods=['POST'])
 def insert_post():
